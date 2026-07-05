@@ -7,9 +7,10 @@ import androidx.navigation.compose.rememberNavController
 import uz.elmurod.minichat.ui.screens.chat.ChatScreen
 import uz.elmurod.minichat.ui.screens.group.GroupScreen
 import uz.elmurod.minichat.ui.screens.home.HomeScreen
-import uz.elmurod.minichat.ui.screens.login.LoginScreen
 import uz.elmurod.minichat.ui.screens.profile.ProfileScreen
 import uz.elmurod.minichat.ui.screens.register.RegisterScreen
+import uz.elmurod.minichat.ui.screens.login.LoginScreen
+
 
 @Composable
 fun AppNavGraph() {
