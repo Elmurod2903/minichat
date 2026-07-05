@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id ("androidx.room")
-    id("com.google.devtools.ksp")
+//    id ("androidx.room")
+//    id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -39,9 +40,9 @@ android {
     buildFeatures {
         compose = true
     }
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
+//    room {
+//        schemaDirectory("$projectDir/schemas")
+//    }
 }
 
 dependencies {
@@ -54,6 +55,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,11 +71,19 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
 
-    //room
-    val room_version = "2.8.4"
-    implementation("androidx.room:room-runtime:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
+//    //room
+//    val room_version = "2.8.4"
+//    implementation("androidx.room:room-runtime:$room_version")
+//    ksp("androidx.room:room-compiler:$room_version")
+//    annotationProcessor("androidx.room:room-compiler:$room_version")
+//    implementation("androidx.room:room-ktx:$room_version")
 
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+
+    implementation("io.coil-kt:coil-compose:2.7.0")
 }

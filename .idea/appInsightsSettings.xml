@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="uz.elmurod.minichat" />
+                  <option name="mobileSdkAppId" value="1:789342281914:android:8ceaef20a1ee4e692be283" />
+                  <option name="projectId" value="minichat-282d1" />
+                  <option name="projectNumber" value="789342281914" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
