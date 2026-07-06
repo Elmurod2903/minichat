@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -34,25 +36,28 @@ fun RegisterScreen(navController: NavController) {
 
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Text(
+            style = MaterialTheme.typography.headlineMedium,
             text = "Create Account",
-            fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
             value = firstName,
@@ -75,6 +80,23 @@ fun RegisterScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(14.dp))
 
         OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(14.dp))
+
+        OutlinedTextField(
+            value = phone,
+            onValueChange = { phone = it },
+            label = { Text("Phone number") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
@@ -84,18 +106,16 @@ fun RegisterScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {
-
-                navController.navigate(Routes.Login.route)
+                navController.popBackStack()
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)
         ) {
-            Text("Register", fontSize = 16.sp)
+            Text("Register")
         }
 
         Spacer(modifier = Modifier.height(60.dp))

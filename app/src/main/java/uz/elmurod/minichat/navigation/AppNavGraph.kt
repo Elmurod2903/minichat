@@ -25,17 +25,18 @@ fun AppNavGraph() {
         composable(Routes.Register.route){
             RegisterScreen(navController)
         }
-        composable(Routes.Profile.route){
-            ProfileScreen(navController)
-        }
-        composable(Routes.Chat.route){
-            ChatScreen(navController)
-        }
-        composable(Routes.Home.route){
-            HomeScreen(navController)
-        }
-        composable(Routes.Groups.route){
-            GroupScreen(navController)
-        }
+
+//        composable(Routes.Profile.route){
+//            ProfileScreen(navController)
+//        }
+//        composable(Routes.Chat.route){
+//            ChatScreen(navController)
+//        }
+//        composable(Routes.Home.route){
+//            HomeScreen(navController)
+//        }
+//        composable(Routes.Groups.route){
+//            GroupScreen(navController)
+//        }
     }
 }
