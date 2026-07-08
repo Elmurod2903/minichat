@@ -8,26 +8,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import uz.elmurod.minichat.auth.AuthViewModel
+import uz.elmurod.minichat.auth.Resourse
 import uz.elmurod.minichat.navigation.Routes
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val authState by viewModel.authState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -54,12 +60,31 @@ fun LoginScreen(navController: NavController) {
         )
         Spacer(Modifier.height(16.dp))
 
-        Button(
-            onClick = { navController.navigate(Routes.Main.route) },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Login")
+        if (authState is Resourse.Loading) {
+            CircularProgressIndicator()
+        } else {
+            Button(
+                onClick = {
+                    viewModel.login(email, password)
+                    navController.navigate(Routes.Main.route) {
+                        popUpTo(Routes.Login.route) {
+                            inclusive = true
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Login")
+            }
         }
+        if (authState is Resourse.Error) {
+            Text(
+                (authState as Resourse.Error).message,
+                color = Color.Red,
+                modifier = Modifier.padding(top = 12.dp)
+            )
+        }
+
         TextButton(onClick = {
             navController.navigate(Routes.Register.route)
         }) {

@@ -13,7 +13,11 @@ class AuthViewModel : ViewModel() {
     private val _authState = MutableStateFlow<Resourse<User>?>(null)
     val authState = _authState.asStateFlow()
 
-    fun register(user: User, password: String, onSuccess: () -> Unit) {
+    private val _currentUser = MutableStateFlow<User?>(null)
+    val currentUser = _currentUser.asStateFlow()
+
+
+    fun register(user: User, password: String) {
         viewModelScope.launch {
             _authState.value = Resourse.Loading
             when (val result = repository.registerUser(user, password)) {
@@ -23,10 +27,20 @@ class AuthViewModel : ViewModel() {
 
                 is Resourse.Success -> {
                     _authState.value = null
-                    onSuccess()
                 }
 
                 else -> {}
+            }
+        }
+    }
+
+    fun login(email: String, password: String) {
+        viewModelScope.launch {
+            _authState.value = Resourse.Loading
+            val result = repository.loginUser(email, password)
+            _authState.value = result
+            if (result is Resourse.Success) {
+                _currentUser.value = result.data
             }
         }
     }
