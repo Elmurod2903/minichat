@@ -16,6 +16,19 @@ class AuthViewModel : ViewModel() {
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser = _currentUser.asStateFlow()
 
+    fun checkCurrentUser(): String? {
+        val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+        if (uid != null) {
+            // Agar foydalanuvchi tizimda bo'lsa, uning ma'lumotlarini Firestore-dan yuklab olamiz
+            viewModelScope.launch {
+                val profile = repository.fetchUserProfile(uid)
+                if (profile != null) {
+                    _currentUser.value = profile
+                }
+            }
+        }
+        return uid
+    }
 
     fun register(user: User, password: String) {
         viewModelScope.launch {
@@ -24,11 +37,9 @@ class AuthViewModel : ViewModel() {
                 is Resourse.Error -> {
                     _authState.value = Resourse.Error(result.message)
                 }
-
                 is Resourse.Success -> {
-                    _authState.value = null
+                    _authState.value = Resourse.Success(user)
                 }
-
                 else -> {}
             }
         }
@@ -43,6 +54,11 @@ class AuthViewModel : ViewModel() {
                 _currentUser.value = result.data
             }
         }
+    }
+    fun logout(){
+        repository.signOut()
+        _currentUser.value=null
+        _authState.value=null
     }
 
 

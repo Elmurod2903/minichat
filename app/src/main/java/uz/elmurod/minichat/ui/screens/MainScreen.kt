@@ -9,11 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import uz.elmurod.minichat.auth.AuthViewModel
 import uz.elmurod.minichat.navigation.BottomNavItem
 import uz.elmurod.minichat.ui.screens.chat.ChatScreen
 import uz.elmurod.minichat.ui.screens.group.GroupScreen
@@ -21,7 +23,7 @@ import uz.elmurod.minichat.ui.screens.home.HomeScreen
 import uz.elmurod.minichat.ui.screens.profile.ProfileScreen
 
 @Composable
-fun MainScreen() {
+fun MainScreen(rootNavController: NavController,authViewModel: AuthViewModel) {
     val childNavController = rememberNavController()
     val items =
         listOf(BottomNavItem.Home, BottomNavItem.Chat, BottomNavItem.Groups, BottomNavItem.Profile)

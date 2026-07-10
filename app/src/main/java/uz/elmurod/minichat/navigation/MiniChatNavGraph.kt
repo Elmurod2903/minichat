@@ -15,37 +15,25 @@ import uz.elmurod.minichat.ui.screens.login.LoginScreen
 @Composable
 fun MiniChatNavGraph() {
     val navController = rememberNavController()
+    val authViewModel: AuthViewModel = viewModel()
+
+    val currentUserUid = remember { authViewModel.checkCurrentUser() }
+
+    val startDestination = if (currentUserUid != null) Routes.Main.route else Routes.Login.route
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Login.route
+        startDestination = startDestination
     ) {
-        composable(Routes.Login.route) { backStackEntry ->
-            val authViewModel: AuthViewModel = viewModel()
+        composable(Routes.Login.route) {
             LoginScreen(navController, authViewModel)
         }
-        composable(Routes.Register.route) { backStackEntry ->
-            val parentEntry =
-                remember(backStackEntry) { navController.getBackStackEntry(Routes.Login.route) }
-            val authViewModel: AuthViewModel = viewModel(parentEntry)
-
+        composable(Routes.Register.route) {
             RegisterScreen(navController, authViewModel)
         }
         composable(Routes.Main.route) {
-            MainScreen()
+            MainScreen(navController, authViewModel)
         }
 
-//        composable(Routes.Profile.route){
-//            ProfileScreen(navController)
-//        }
-//        composable(Routes.Chat.route){
-//            ChatScreen(navController)
-//        }
-//        composable(Routes.Home.route){
-//            HomeScreen(navController)
-//        }
-//        composable(Routes.Groups.route){
-//            GroupScreen(navController)
-//        }
     }
 }
