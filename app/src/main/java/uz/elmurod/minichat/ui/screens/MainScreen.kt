@@ -23,7 +23,7 @@ import uz.elmurod.minichat.ui.screens.home.HomeScreen
 import uz.elmurod.minichat.ui.screens.profile.ProfileScreen
 
 @Composable
-fun MainScreen(rootNavController: NavController,authViewModel: AuthViewModel) {
+fun MainScreen(rootNavController: NavController, authViewModel: AuthViewModel) {
     val childNavController = rememberNavController()
     val items =
         listOf(BottomNavItem.Home, BottomNavItem.Chat, BottomNavItem.Groups, BottomNavItem.Profile)
@@ -61,11 +61,16 @@ fun MainScreen(rootNavController: NavController,authViewModel: AuthViewModel) {
             startDestination = BottomNavItem.Home.route,
             modifier = Modifier.padding(innerPadding)
 
-        ){
-            composable(BottomNavItem.Home.route){ HomeScreen() }
-            composable(BottomNavItem.Chat.route){ ChatScreen() }
-            composable(BottomNavItem.Groups.route){ GroupScreen() }
-            composable(BottomNavItem.Profile.route){ ProfileScreen() }
+        ) {
+            composable(BottomNavItem.Home.route) { HomeScreen() }
+            composable(BottomNavItem.Chat.route) { ChatScreen() }
+            composable(BottomNavItem.Groups.route) { GroupScreen() }
+            composable(BottomNavItem.Profile.route) {
+                ProfileScreen(
+                    authViewModel = authViewModel,
+                    rootNavController = rootNavController
+                )
+            }
         }
     }
 }
