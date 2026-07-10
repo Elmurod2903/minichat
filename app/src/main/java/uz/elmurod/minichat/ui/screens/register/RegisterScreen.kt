@@ -17,6 +17,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,11 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel) {
     var password by remember { mutableStateOf("") }
     val authState by viewModel.authState.collectAsState()
 
+    LaunchedEffect(authState) {
+        if (authState is Resourse.Success) {
+            navController.popBackStack()
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,15 +126,17 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel) {
         } else {
             Button(
                 onClick = {
-                    val user = User(
-                        firstName = firstName,
-                        lastName = lastName,
-                        email = email,
-                        phone = phone,
-                    )
-                    viewModel.register(user = user, password)
-                    navController.popBackStack()
+                    if (firstName.isNotBlank() && lastName.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
+                        val user = User(
+                            firstName = firstName,
+                            lastName = lastName,
+                            email = email,
+                            phone = phone,
+                        )
+                        viewModel.register(user = user, password.trim())
+                    }
                 },
+                enabled = firstName.isNotBlank() && lastName.isNotBlank() && email.isNotBlank() && password.isNotBlank(),
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
@@ -141,11 +149,10 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel) {
                 )
         }
 
-
         Spacer(modifier = Modifier.height(60.dp))
 
         TextButton(
-            onClick = { navController.navigate(Routes.Login.route) }
+            onClick = { navController.popBackStack() }
         ) {
             Text(
                 "Already have an account? Login",

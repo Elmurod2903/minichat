@@ -34,21 +34,31 @@ class AuthRepository {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             val uid = result.user?.uid ?: return Resourse.Error("Foydalanuvchi topilmadi")
 
-            val document = db.collection("users").document(uid).get().await()
-            val user = document.toObject(User::class.java)
-
+//            val document = db.collection("users").document(uid).get().await()
+//            val user = document.toObject(User::class.java)
+            val user = fetchUserProfile(uid)
             if (user != null) {
                 Resourse.Success(user)
             } else {
                 Resourse.Error("Profil malumotlari bo'sh")
             }
-
         } catch (e: Exception) {
             Resourse.Error(e.localizedMessage ?: "Login yoki Parol xato")
 
         }
 
     }
-
+    suspend fun fetchUserProfile(uid: String): User? {
+        return try {
+            val document = db.collection("users").document(uid).get().await()
+            document.toObject(User::class.java)
+        } catch (e: Exception) {
+            null
+        }
+    }
     fun getCurrentUserUid(): String? = auth.currentUser?.uid
+
+    fun signOut() {
+        auth.signOut()
+    }
 }

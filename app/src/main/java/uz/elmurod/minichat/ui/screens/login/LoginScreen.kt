@@ -14,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.rpc.context.AttributeContext
 import uz.elmurod.minichat.auth.AuthViewModel
 import uz.elmurod.minichat.auth.Resourse
 import uz.elmurod.minichat.navigation.Routes
@@ -35,6 +37,13 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
     var password by remember { mutableStateOf("") }
     val authState by viewModel.authState.collectAsState()
 
+    LaunchedEffect(authState) {
+        if (authState is Resourse.Success) {
+            navController.navigate(Routes.Main.route) {
+                popUpTo(Routes.Login.route) { inclusive = true }
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -42,6 +51,9 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text("MiniChat", style = MaterialTheme.typography.headlineLarge)
+        Spacer(modifier = Modifier.height(24.dp))
+
         OutlinedTextField(
             value = email,
             onValueChange = {
@@ -65,17 +77,23 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
         } else {
             Button(
                 onClick = {
-                    viewModel.login(email, password)
-                    navController.navigate(Routes.Main.route) {
-                        popUpTo(Routes.Login.route) {
-                            inclusive = true
-                        }
+                    if (email.trim().isNotEmpty() && password.trim().isNotEmpty()) {
+                        viewModel.login(email.trim(), password.trim())
                     }
                 },
+                enabled = email.trim().isNotEmpty() && password.trim().isNotEmpty(),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Login")
             }
+        }
+        if (email.trim().isEmpty() || password.trim().isEmpty()) {
+            Text(
+                text = "Iltimos, barcha maydonlarni to'ldiring",
+                color = Color.Gray,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 8.dp)
+            )
         }
         if (authState is Resourse.Error) {
             Text(
@@ -94,7 +112,5 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                 color = MaterialTheme.colorScheme.primary
             )
         }
-
-
     }
 }
