@@ -30,6 +30,9 @@ class AuthRepository {
     }
 
     suspend fun loginUser(email: String, password: String): Resourse<User> {
+        if (email.isBlank() || password.isBlank()){
+            return Resourse.Error("Profil malumoti bo'sh")
+        }
         return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             val uid = result.user?.uid ?: return Resourse.Error("Foydalanuvchi topilmadi")
