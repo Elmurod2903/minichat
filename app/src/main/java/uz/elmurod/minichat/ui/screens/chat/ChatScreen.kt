@@ -39,15 +39,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import uz.elmurod.minichat.auth.Resourse
 import uz.elmurod.minichat.data.model.User
+import uz.elmurod.minichat.ui.screens.chat.details.ChatDetailScreen
 
 @Composable
-fun ChatScreen(chatViewModel: ChatViewModel = viewModel()) {
+fun ChatScreen(
+    navController: NavController,
+    chatViewModel: ChatViewModel = viewModel()
+) {
     val searchQuery by chatViewModel.searchQuery.collectAsState()
     val usersState by chatViewModel.filteredUsers.collectAsState()
 
@@ -57,7 +63,7 @@ fun ChatScreen(chatViewModel: ChatViewModel = viewModel()) {
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+//        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = searchQuery,
@@ -100,7 +106,7 @@ fun ChatScreen(chatViewModel: ChatViewModel = viewModel()) {
                         ) {
                             items(users) { user ->
                                 UserItem(user, onClick = {
-                                    // todo message screen
+                                    navController.navigate("chat_detail/${user.uid}")
                                 })
                             }
                         }
@@ -152,12 +158,21 @@ fun UserItem(user: User, onClick: () -> Unit) {
                     .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "User Avatar",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.size(28.dp)
-                )
+                if (user.profileImageUrl.isNotEmpty()) {
+                    AsyncImage(
+                        model = user.profileImageUrl,
+                        contentDescription = "User Avatar",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "User Avatar",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Spacer(modifier = Modifier.width(8.dp))

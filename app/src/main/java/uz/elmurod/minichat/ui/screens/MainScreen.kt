@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import uz.elmurod.minichat.auth.AuthViewModel
 import uz.elmurod.minichat.navigation.BottomNavItem
 import uz.elmurod.minichat.ui.screens.chat.ChatScreen
+import uz.elmurod.minichat.ui.screens.chat.details.ChatDetailScreen
 import uz.elmurod.minichat.ui.screens.group.GroupScreen
 import uz.elmurod.minichat.ui.screens.home.HomeScreen
 import uz.elmurod.minichat.ui.screens.profile.ProfileScreen
@@ -63,13 +64,23 @@ fun MainScreen(rootNavController: NavController, authViewModel: AuthViewModel) {
 
         ) {
             composable(BottomNavItem.Home.route) { HomeScreen() }
-            composable(BottomNavItem.Chat.route) { ChatScreen() }
+            composable(BottomNavItem.Chat.route) { ChatScreen(navController = childNavController) }
             composable(BottomNavItem.Groups.route) { GroupScreen() }
             composable(BottomNavItem.Profile.route) {
                 ProfileScreen(
                     authViewModel = authViewModel,
                     rootNavController = rootNavController
                 )
+            }
+            composable(route = "chat_detail/{receiverId}") { backStackEntry ->
+                val receiverId = backStackEntry.arguments?.getString("receiverId") ?: ""
+
+                ChatDetailScreen(
+                    navController = childNavController,
+                    receiverId = receiverId,
+
+                    )
+
             }
         }
     }

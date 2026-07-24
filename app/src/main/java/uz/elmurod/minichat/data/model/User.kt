@@ -8,7 +8,6 @@ data class User(
     val email: String="",
     val phone: String="",
     val profileImageUrl: String=""
-//    val password: String=""
 ){
     fun toMap(): Map<String, Any>{
         return mapOf(

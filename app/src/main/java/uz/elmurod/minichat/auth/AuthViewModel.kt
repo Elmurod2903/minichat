@@ -1,13 +1,19 @@
 package uz.elmurod.minichat.auth
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import uz.elmurod.minichat.data.model.User
 
 class AuthViewModel : ViewModel() {
+    private val storage = FirebaseStorage.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
     private val repository = AuthRepository()
 
     private val _authState = MutableStateFlow<Resourse<User>?>(null)
@@ -17,7 +23,7 @@ class AuthViewModel : ViewModel() {
     val currentUser = _currentUser.asStateFlow()
 
     fun checkCurrentUser(): String? {
-        val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         if (uid != null) {
             // Agar foydalanuvchi tizimda bo'lsa, uning ma'lumotlarini Firestore-dan yuklab olamiz
             viewModelScope.launch {
@@ -59,6 +65,21 @@ class AuthViewModel : ViewModel() {
         repository.signOut()
         _currentUser.value=null
         _authState.value=null
+    }
+    fun uploadProfileImage(imageUri: Uri) {
+        val uid = currentUser.value?.uid ?: return
+
+        val storageRef = storage.reference.child("profile_images/$uid.jpg")
+        storageRef.putFile(imageUri).addOnSuccessListener {
+            storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                firestore.collection("users")
+                    .document(uid)
+                    .update("profileImageUrl", downloadUrl.toString())
+                    .addOnSuccessListener {
+                        _currentUser.value = _currentUser.value?.copy(profileImageUrl = downloadUrl.toString())
+                    }
+            }
+        }
     }
 
 
