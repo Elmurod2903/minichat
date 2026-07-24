@@ -60,7 +60,7 @@ fun ChatScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color(0xFFFF9800))
             .padding(16.dp)
     ) {
 //        Spacer(modifier = Modifier.height(16.dp))
@@ -142,7 +142,7 @@ fun UserItem(user: User, onClick: () -> Unit) {
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = Color(0xFFFFF4B8)
         )
     ) {
         Row(

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -89,7 +90,8 @@ fun ChatDetailScreen(
             .imePadding(),
         topBar = {
         TopAppBar(
-            windowInsets = WindowInsets.statusBars,
+            modifier = Modifier.height(62.dp),
+            windowInsets = WindowInsets(0,0,0,0),
             title = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -120,6 +122,7 @@ fun ChatDetailScreen(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
+                        modifier = Modifier.padding(top = 8.dp),
                         text = receiverUser?.let { "${it.firstName} ${it.lastName}" }
                             ?: "Yuklanmoqda...",
                         fontSize = 18.sp,
@@ -139,7 +142,7 @@ fun ChatDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)
+                .background(Color(0xFFE5BC53))
         ) {
             LazyColumn(
                 state = listState,
